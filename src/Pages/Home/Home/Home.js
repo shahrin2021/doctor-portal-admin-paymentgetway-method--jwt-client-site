@@ -3,6 +3,7 @@ import Navigation from '../../../Shared/Navigation/Navigation';
 import ApointmentBanner from '../ApointmentBanner/ApointmentBanner';
 import Banner from '../Banner/Banner';
 import Services from '../Services/Services';
+import Doctors from './Doctors/Doctors';
 
 const Home = () => {
     return (
@@ -11,6 +12,7 @@ const Home = () => {
             <Banner></Banner>
             <Services></Services>
             <ApointmentBanner></ApointmentBanner>
+            <Doctors></Doctors>
         </div>
     );
 };
