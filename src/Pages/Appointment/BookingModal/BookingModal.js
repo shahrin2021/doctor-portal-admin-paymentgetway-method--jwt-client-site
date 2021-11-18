@@ -61,11 +61,15 @@ const style = {
       },body:JSON.stringify(appointment)
     }).then(res=>res.json())
     .then(data=>{
-      if(data.insertedId){
+      if(data?.insertedId){
+        alert('booking success fully')
         setBookingSuccess(true)
         handleBookingClose()
       }
+      console.log(data)
     })
+
+
 
     e.preventDefault();
 

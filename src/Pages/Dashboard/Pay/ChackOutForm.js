@@ -8,7 +8,7 @@ const ChackOutForm = ({appointment}) => {
     const elements = useElements()
     const stripe = useStripe();
     const [clientSecret,setClientSecret] = useState('');
-    const {price,patientName} =appointment;
+    const {price,patientName, _id} =appointment;
     const {user}= useAuth();
     const [success, setSuccess] = useState('');
     const [processing, setProcessing] = useState(false);
@@ -17,13 +17,13 @@ const ChackOutForm = ({appointment}) => {
       fetch('http://localhost:5000/create-payment-intent',{
         method:'POST',
         headers:{
-          'content':'application/json'
+          'content-type':'application/json'
         },
         body: JSON.stringify({price})
       })
       .then(res=>res.json())
       .then(data=> {
-        setClientSecret(data)
+        setClientSecret(data.clientSecret)
       })
     },[price])
     const handleSubmit= async (e)=>{
@@ -49,7 +49,7 @@ const ChackOutForm = ({appointment}) => {
             }else{
               setError('')
               console.log(paymentMethod)
-              setSuccess('your prament successfullyu')
+              
             }
 
             // payment intent
@@ -69,14 +69,37 @@ const ChackOutForm = ({appointment}) => {
             );
             if(intentError){
               setError(intentError.message)
+              setSuccess('')
             }else{
               setError('')
               console.log(paymentIntent)
-
+              setSuccess('your prament successfullyu')
+              setProcessing(false);
+              const payment={
+                amount: paymentIntent.amount, 
+                created:paymentIntent.created,
+                lastFour: paymentMethod.card.last4,
+                transaction:paymentIntent.client_secret.slice('_secret')[0]
+              }
+              const url =`http://localhost:5000/appointments/${_id}`;
+              fetch(url,{
+                method: 'PUT',
+                headers:{
+                  'content-type': 'application/json'
+                },
+                body: JSON.stringify(payment)
+              })
+              .then(res=>res.json())
+              .then(data=> {
+                console.log(data)
+              })
             }
         
             
     }
+
+
+
     return (
         
         <div>
@@ -97,7 +120,7 @@ const ChackOutForm = ({appointment}) => {
           },
         }}
       />
-     { processing ? <CircularProgress/> : <button className='d-block mx-auto' type="submit" disabled={!stripe}>
+     { processing ? <CircularProgress/> : <button className='d-block mx-auto' type="submit" disabled={!stripe || success} >
         Pay ${appointment.price}
       </button>}
     </form>

@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Rowing } from '@mui/icons-material';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const Appointments = ({date}) => {
 
@@ -51,7 +51,10 @@ const Appointments = ({date}) => {
               </TableCell>
               <TableCell align="right">{appointment.time}</TableCell>
               <TableCell align="right">{appointment.date}</TableCell>
-              <TableCell align="right">{appointment.Payment ? 'paid' : <NavLink to={`/dashboard/payment/${appointment._id}`}><button>Pay</button></NavLink>}</TableCell>
+              <TableCell align="right">{appointment.payment ?
+                                    'Paid' :
+                                    <Link to={`/dashboard/payment/${appointment._id}`}><button>Pay</button></Link>
+                                }</TableCell>
             </TableRow>
           ))}
         </TableBody>
